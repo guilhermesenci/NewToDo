@@ -45,13 +45,22 @@ const useStyles = makeStyles((theme) => ({
 
 function Home() {
   const [toDo, setTodo] = useState([
-    { title: "titulo", desc: "descrição", status: true },
+    { title: "1", desc: "descrição" },
+    { title: "2", desc: "descrição" },
+    { title: "3", desc: "descrição" },
   ]);
 
   const [newToDo, setNewToDo] = useState('')
 
   function handleAddToDo() {
-    setTodo([...toDo, newToDo]);
+    const toDoObject = { title: newToDo, desc: newToDo }
+    setTodo([...toDo, toDoObject]);
+    setNewToDo("");
+  }
+
+  const handleRemoveItem = (doneToDos) => {
+    const completeToDo = toDo.filter((toDo) => toDo.title !== doneToDos)
+    setTodo([completeToDo])
   }
 
   const classes = useStyles();
@@ -84,6 +93,7 @@ function Home() {
                 name="title"
                 value={newToDo}
                 onChange={e => setNewToDo(e.target.value)}
+                key={toDo.title}
               />
               <TextField
                 variant="outlined"
@@ -93,6 +103,7 @@ function Home() {
                 autoFocus
                 label="Descrição"
                 name="desc"
+                key={toDo.desc}
               />
               <Button
                 variant="contained"
@@ -107,22 +118,27 @@ function Home() {
           <p />
           <Grid container spacing={4}>
             {toDo.map((toDo) => (
-              <Grid item key={toDo} xs={12} sm={6} md={4}>
+              <Grid item key={toDo.title} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                    >
                       {toDo.title}
                     </Typography>
-                    <Typography key={toDo.desc}>
+                    <Typography>
                       {toDo.desc}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={handleRemoveItem}
+                    >
                       Completar
-                    </Button>
-                    <Button size="small" color="primary">
-                      Editar
                     </Button>
                   </CardActions>
                 </Card>
@@ -130,10 +146,7 @@ function Home() {
             ))}
           </Grid>
         </Container>
-        <Grid
-          display="flex"
-          justifyContent="center"
-        >
+        <Grid>
           <Button
             variant="contained"
             color="secondary"
